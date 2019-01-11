@@ -71,10 +71,10 @@ class Dog
     if !dog.empty? #if dog instance exists we can play around with dog_data but it will not be saved to the database (avoiding dups!!)
       dog_data = dog[0]
       dog = Dog.new(id: dog_data[0], name: dog_data[1], breed: dog_data[2])
-    else 
+    else #if doesn't exist, create object!
       dog = self.create(name: name, breed: breed)
     end 
-    dog 
+    dog # return the object you either selected or created!!
   end 
   
   def self.find_by_name(name)
@@ -91,10 +91,10 @@ class Dog
   
   def update
     sql = <<-SQL 
-      UPDATE dogs SET name = ?, breed = ? WHERE id = ?
+      UPDATE dogs SET name = ?, breed = ? WHERE id = ? 
       SQL
-      
-    DB[:conn].execute(sql, self.name, self.breed, self.id)
+    #editing the row based off of id, the uniqie identifier.   
+    DB[:conn].execute(sql, self.name, self.breed, self.id) #you have to execute the inputs you entered. 
   end 
     
   
