@@ -9,7 +9,7 @@ class Dog
     @breed = breed
   end 
   
-  def self.create_table
+  def self.create_table #remember to include columns :)
     sql= <<-SQL
     CREATE TABLE dogs (
       id INTEGER PRIMARY KEY,
@@ -29,7 +29,7 @@ class Dog
     DB[:conn].execute(sql) 
   end 
   
-  def save
+  def save #instance method because you are saving a row
     sql = <<-SQL
       INSERT INTO dogs (name,breed)
       VALUES (?, ?)
