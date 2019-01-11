@@ -9,7 +9,7 @@ class Dog
     @breed = breed
   end 
   
-  def self.create_table
+  def self.create_table #remember to include columns :)
     sql= <<-SQL
     CREATE TABLE dogs (
       id INTEGER PRIMARY KEY,
@@ -29,28 +29,28 @@ class Dog
     DB[:conn].execute(sql) 
   end 
   
-  def save
+  def save #instance method because you are saving a row
     sql = <<-SQL
       INSERT INTO dogs (name,breed)
       VALUES (?, ?)
     SQL
     
     DB[:conn].execute(sql, self.name, self.breed)
-    @id = DB[:conn].execute("SELECT last_insert_rowid() from dogs")[0][0] #not sure what these 0's mean...
-    self
+    @id = DB[:conn].execute("SELECT last_insert_rowid() from dogs")[0][0] #This would return an array of arrays w/o the double 0's. [0] = [1]; [0][0] = 1
+    self #returning the row 
   end 
   
   def self.create(name:, breed:)
-    dog = Dog.new(name: name, breed: breed)
+    dog = Dog.new(name: name, breed: breed)#this is a hash
     dog.save
     dog
   end   
   
-  def self.new_from_db(row)
-    id = row[0]
-    name = row[1]
-    breed = row[2]
-    self.new(id: id, name: name, breed: breed)
+  def self.new_from_db(row) #creates object from database
+    id = row[0]#the
+    name = row[1]#set-
+    breed = row[2]#up
+    self.new(id: id, name: name, breed: breed)#the creation!
   end 
     
   
@@ -63,18 +63,18 @@ class Dog
     
     DB[:conn].execute(sql, id).map do |row|
      self.new_from_db(row)
-    end.first
+    end.first #returns first element of array
   end 
   
   def self.find_or_create_by(name:, breed:)
     dog = DB[:conn].execute("SELECT * FROM dogs WHERE name = ? AND breed = ?", name, breed)
-    if !dog.empty?
+    if !dog.empty? #if dog instance exists we can play around with dog_data but it will not be saved to the database (avoiding dups!!)
       dog_data = dog[0]
       dog = Dog.new(id: dog_data[0], name: dog_data[1], breed: dog_data[2])
-    else 
+    else #if doesn't exist, create object!
       dog = self.create(name: name, breed: breed)
     end 
-    dog 
+    dog # return the object you either selected or created!!
   end 
   
   def self.find_by_name(name)
@@ -91,10 +91,10 @@ class Dog
   
   def update
     sql = <<-SQL 
-      UPDATE dogs SET name = ?, breed = ? WHERE id = ?
+      UPDATE dogs SET name = ?, breed = ? WHERE id = ? 
       SQL
-      
-    DB[:conn].execute(sql, self.name, self.breed, self.id)
+    #editing the row based off of id, the uniqie identifier.   
+    DB[:conn].execute(sql, self.name, self.breed, self.id) #you have to execute the inputs you entered. 
   end 
     
   
