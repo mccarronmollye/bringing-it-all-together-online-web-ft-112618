@@ -36,7 +36,7 @@ class Dog
     SQL
     
     DB[:conn].execute(sql, self.name, self.breed)
-    @id = DB[:conn].execute("SELECT last_insert_rowid() from dogs")#[0][0] #not sure what these 0's mean...
+    @id = DB[:conn].execute("SELECT last_insert_rowid() from dogs")[0][0] #This would return an array of arrays w/o the double 0's. [0] = [1]; [0][0] = 1
     self #returning the row 
   end 
   
